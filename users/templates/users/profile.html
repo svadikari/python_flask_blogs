@@ -1,0 +1,45 @@
+{%extends 'base.html'%}
+{% block content%}
+<form action="" method="POST" enctype="multipart/form-data">
+  {{ form.hidden_tag() }}
+  <fieldset class="form-group">
+    <legend class="border-bottom mb-4">Profile</legend>
+    <div class="form-group row g-3 align-items-center">
+      <div class="col-2">
+        {{form.first_name.label(class='form-control-label')}}
+      </div>
+      <div class="col-auto mb-2">
+        {{form.first_name(class='form-control form-control-lg')}}
+        {% for error in form.first_name.errors %}
+          <span class="text-danger" role="alert">{{ error }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="form-group row g-3 align-items-center">
+      <div class="col-2">
+        {{form.last_name.label(class='form-control-label')}}
+      </div>
+      <div class="col-auto mb-2">
+        {{form.last_name(class='form-control form-control-lg')}}
+        {% for error in form.last_name.errors %}
+          <span class="text-danger" role="alert">{{ error }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="form-group row g-3 align-items-center">
+      <div class="col-2">
+        {{form.profile_image.label(class='form-control-label')}}
+      </div>
+      <div class="col-auto mb-2">
+        {{form.profile_image(class='form-control form-control-lg')}}
+        {% for error in form.profile_image.errors %}
+          <span class="text-danger" role="alert">{{ error }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </fieldset>
+  <div class="form-group mt-4">
+    {{form.submit(label='Save', class='btn btn-outline-primary')}}
+  </div>
+</form>
+{% endblock content%}

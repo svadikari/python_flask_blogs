@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% for blog in pagination.items %}
+    <div class="card mb-3">
+      <div class="card-header">
+        <img class="rounded-circle shadow-4-strong profile-pic" src="{{url_for('static', filename='profile_pics/'+blog.author.profile_image)}}" alt="avatar1"/>
+        <a class="mr-2" href="?filterByUser={{blog.author.id}}">{{ blog.author.first_name }} {{
+          blog.author.last_name }}</a>
+        <small class="text-muted">{{ blog.created }}</small>
+        <h5 class="card-title">{{ blog.title }}</h5>
+        {%if blog.author == current_user%}
+          <a class="card-link" href="{{url_for('blogs.update_blog', id=blog.id)}}">Update</a>
+          <button type="button" class="btn btn-link text-danger mb-1" data-toggle="modal"
+                  data-target="#blogDeleteModal" onclick="setBlogDeleteAction({{blog.id}})">
+            Delete
+          </button>
+        {%endif%}
+      </div>
+      <div class="card-body">
+        <p class="card-text">{{ blog.details }}</p>
+      </div>
+    </div>
+  {% endfor %}
+
+
+  {% if pagination.has_pages %}
+    <nav aria-label="navigation">
+      <ul class="pagination">
+        {% if pagination.has_prev %}
+        <li class="page-item"><a class="page-link" href="?per_page={{per_page}}&page=1&filterByUser={{filterByUser}}">First</a></li>
+        <li class="page-item"><a class="page-link" href="?per_page={{per_page}}&page={{pagination.prev_num}}&filterByUser={{filterByUser}}">Previous</a></li>
+        {%else%}
+          <li class="page-item disabled"><a class="page-link" href="#">First</a></li>
+          <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+        {%endif%}
+        <li class="page-item disabled"><span class="page-link">Page {{ pagination.page }} of {{ pagination.pages }}.</span></li>
+        {% if pagination.has_next %}
+          <li class="page-item"><a class="page-link" href="?per_page={{per_page}}&page={{pagination.next_num}}&filterByUser={{filterByUser}}">Next</a></li>
+         <li class="page-item"><a class="page-link" href="?per_page={{per_page}}&page={{pagination.pages}}&filterByUser={{filterByUser}}">Last</a></li>
+        {%else%}
+          <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+          <li class="page-item disabled"><a class="page-link" href="#">Last</a></li>
+        {%endif%}
+        <li class="page-item">
+        <form method="GET">
+          <label class="ml-5">
+            <select class="form-select" name="per_page">
+                <option value="2" {% if per_page == 2 %}selected{% endif %}>2</option>
+                <option value="5" {% if per_page == 5 %}selected{% endif %}>5</option>
+                <option value="10" {% if per_page == 10 %}selected{% endif %}>10</option>
+            </select>
+          </label>
+          <button class="btn btn-outline-primary" type="submit">Apply</button>
+        </form>
+        </li>
+      </ul>
+    </nav>
+  {%endif%}
+<!-- Modal -->
+  <script type="text/javascript">
+    function setBlogDeleteAction(val) {
+      $("#deleteForm").attr("action", "/blogs/"+val+"/delete");
+    }
+  </script>
+  <div class="modal fade" id="blogDeleteModal" tabindex="-1" aria-labelledby="blogDeleteModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="blogDeleteModalLabel">Delete Blog</h1>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h1 id="model_body"></h1>
+          Are you sure? You want to delete the blog?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form id="deleteForm" action="" method="POST">
+            <button type="submit" class="btn btn-primary">Confirm</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
