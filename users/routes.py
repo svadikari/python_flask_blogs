@@ -74,19 +74,14 @@ def save_profile_image(profile_image):
 @users.route("/profile", methods=['GET', 'POST'])
 def profile():
   form = ProfileForm(first_name=current_user.first_name, last_name=current_user.last_name, profile_image = current_user.profile_image)
-  print('form submitted...........')
   if form.validate_on_submit():
-    print(form.profile_image.data)
-    flash('Profile updated successfully!', 'success')
     current_user.first_name=form.first_name.data
     current_user.last_name=form.last_name.data
-
     if form.profile_image.data:
       current_user.profile_image = save_profile_image(form.profile_image.data)
     db.session.commit()
+    flash('Profile updated successfully!', 'success')
     return redirect(url_for('users.profile'))
-  else:
-    print(form.errors)
   return render_template('users/profile.html', form=form)
 
 @users.route("/forgot_password")
